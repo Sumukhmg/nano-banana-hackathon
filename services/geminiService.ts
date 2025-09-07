@@ -95,9 +95,8 @@ export const generateCharacterImage = async (description: string, style: MangaSt
     const prompt = `Create a full-body character reference sheet for a manga character in a ${style} style. The character is: "${description}". The background should be a simple, plain white to isolate the character. The character should have a neutral expression.`;
 
     try {
-        // FIX: Switched from 'imagen-4.0-generate-001' to 'gemini-2.5-flash-image-preview' to avoid API errors related to billing. This model is more broadly available.
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash-image-preview',
+            model: 'nano-banana',
             contents: { parts: [{ text: prompt }] },
             config: {
                 responseModalities: [Modality.IMAGE, Modality.TEXT],
@@ -146,15 +145,13 @@ export const generatePanelImage = async (panelDescription: string, characters: C
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash-image-preview',
+            model: 'nano-banana',
             contents: { parts },
             config: {
-                // FIX: Updated `responseModalities` to include both `Modality.IMAGE` and `Modality.TEXT` as required by the 'gemini-2.5-flash-image-preview' model for image editing tasks.
                 responseModalities: [Modality.IMAGE, Modality.TEXT],
             },
         });
 
-        // FIX: Implemented a safer response parsing logic. Instead of assuming the first part is an image, the code now iterates through all response parts to reliably find and return the image data.
         const responseParts = response.candidates?.[0]?.content?.parts;
         if (responseParts) {
             for (const part of responseParts) {
