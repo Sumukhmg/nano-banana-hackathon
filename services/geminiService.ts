@@ -95,20 +95,24 @@ export const generateCharacterImage = async (description: string, style: MangaSt
     const prompt = `Create a full-body character reference sheet for a manga character in a ${style} style. The character is: "${description}". The background should be a simple, plain white to isolate the character. The character should have a neutral expression.`;
 
     try {
-        // FIX: Switched to the `generateImages` API with the 'imagen-4.0-generate-001' model for text-to-image generation, adhering to the updated API guidelines. This is more appropriate than using the image editing model for creating a new character image from a text description.
-        const response = await ai.models.generateImages({
-            model: 'imagen-4.0-generate-001',
-            prompt: prompt,
+        // FIX: Switched from 'imagen-4.0-generate-001' to 'gemini-2.5-flash-image-preview' to avoid API errors related to billing. This model is more broadly available.
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash-image-preview',
+            contents: { parts: [{ text: prompt }] },
             config: {
-                numberOfImages: 1,
-                outputMimeType: 'image/png', // Using PNG for consistency with panel generation
-                aspectRatio: '3:4', // Character sheets are often taller than they are wide
+                responseModalities: [Modality.IMAGE, Modality.TEXT],
             },
         });
-        
-        if (response.generatedImages && response.generatedImages.length > 0) {
-            return response.generatedImages[0].image.imageBytes;
+
+        const responseParts = response.candidates?.[0]?.content?.parts;
+        if (responseParts) {
+            for (const part of responseParts) {
+                if (part.inlineData) {
+                    return part.inlineData.data;
+                }
+            }
         }
+        
         throw new Error("No image was generated for the character.");
     } catch (error) {
         console.error("Error generating character image:", error);
