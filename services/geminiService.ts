@@ -96,7 +96,7 @@ export const generateCharacterImage = async (description: string, style: MangaSt
 
     try {
         const response = await ai.models.generateContent({
-            model: 'nano-banana',
+            model: 'gemini-2.5-flash-image-preview',
             contents: { parts: [{ text: prompt }] },
             config: {
                 responseModalities: [Modality.IMAGE, Modality.TEXT],
@@ -145,7 +145,7 @@ export const generatePanelImage = async (panelDescription: string, characters: C
 
     try {
         const response = await ai.models.generateContent({
-            model: 'nano-banana',
+            model: 'gemini-2.5-flash-image-preview',
             contents: { parts },
             config: {
                 responseModalities: [Modality.IMAGE, Modality.TEXT],
