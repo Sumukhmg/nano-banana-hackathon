@@ -1,0 +1,5 @@
+{
+  "name": "Copy of AI Manga Maker",
+  "description": "An interactive web app that turns a short user-written story into a manga-style comic book using AI. Users can generate manga panels, get auto-generated dialogue, and export the result in various formats.",
+  "requestFramePermissions": []
+}
